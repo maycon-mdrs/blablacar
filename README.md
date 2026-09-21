@@ -143,13 +143,13 @@ O motorista responde o pedido:
 
 ## 9. Consultas
 
-A máquina de estados / modelo deve permitir consultar:
+A máquina deve expor consultas com **assinatura concreta** (parâmetros e retornos escalares — sem conjuntos, sequências nem tuplas):
 
 - vagas restantes
 - se o usuário é verificado
 - pontuação do usuário
 - status da viagem / do pedido
 - quantidade de vagas pedidas em um pedido
-- lista de passageiros aceitos
-- motorista / origem / destino / preço
-- histórico e posição no histórico
+- se um usuário é passageiro aceito em uma viagem (predicados por `(viagem, usuário)`, não “lista” de retorno)
+- motorista, origem, destino e preço (uma consulta por atributo)
+- tamanho do histórico, viagem na posição `i`, e posição de uma viagem no histórico

@@ -37,3 +37,10 @@ op_name(params) =
 ```
 
 Corpos (`THEN` com atribuições) entram em entregas posteriores, quando o estado correspondente estiver modelado.
+
+### Assinaturas concretas
+
+Parâmetros e retornos de operações são **sempre escalares** (elementos de sets, `NAT`, `BOOL`, enums). **Não** se usam conjuntos, sequências, relações nem tuplas na assinatura.
+
+- Consultas que “listariam” elementos viram predicados ou acesso por índice, por exemplo `bb <-- is_accepted_on(t, u)` e `tt <-- history_at(i)`.
+- Vários atributos de um mesmo objeto → uma operação por atributo (`get_driver(t)`, `get_origin(t)`, …), não um único retorno composto.

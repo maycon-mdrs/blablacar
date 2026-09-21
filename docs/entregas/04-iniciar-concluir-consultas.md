@@ -18,45 +18,55 @@ Reutiliza `TRIP_STATUS` / `REQ_STATUS` já introduzidos. Sem sets novos obrigat�
 
 | Variável | Intenção |
 |----------|----------|
-| `history` | Sequência / lista ordenada de viagens `finished` |
+| `history_len` | Tamanho do histórico (`NAT`) |
+| `history_at` | Função `1..history_len --> TRIPS` (posição → viagem `finished`) |
 
 Status `ongoing` e `finished` passam a ser alcançáveis via operações desta entrega.
+
+> O histórico é estado interno indexado; **operações** nunca recebem nem devolvem a sequência inteira.
 
 ---
 
 ## 4. INVARIANT (a acrescentar)
 
 - Viagem `ongoing` / `finished` / `cancelled` ⇒ sem pedidos `pending`
-- Histórico só contém viagens com `trip_status = finished`
-- Ordem do histórico preservada (append ao concluir)
+- Domínio de `history_at` = `1..history_len`; imagem ⊆ viagens com `trip_status = finished`
+- Ordem do histórico preservada (append ao concluir: `history_len := history_len + 1` e `history_at(history_len) := t`)
 - Demais invariantes de §7–§8 já cobertos em E1–E3 permanecem
 
 ---
 
 ## 5. OPERATIONS (esqueleto previsto)
 
+Assinaturas **concretas** (só escalares); ver [convenção](README.md#assinaturas-concretas).
+
 ### Ciclo de vida
 
 | Operação | Pré-condições / efeito |
 |----------|-------------------------|
 | `start_trip(t)` | status `open` ou `full`; `occupation(t) >= 1`; → `ongoing`; pedidos `pending` da viagem → `refused` |
-| `finish_trip(t)` | status `ongoing`; → `finished`; append de `t` em `history` |
+| `finish_trip(t)` | status `ongoing`; → `finished`; append de `t` no histórico |
 
-### Consultas (§9) — operações de leitura
+### Consultas (§9) — leitura com retorno escalar
 
-| Operação | Retorno pretendido |
-|----------|--------------------|
-| `remaining_seats(t)` | `seats(t) - occupation(t)` |
-| `is_verified(u)` | `verified(u)` |
-| `user_score(u)` | `score(u)` |
-| `get_trip_status(t)` | `trip_status(t)` |
-| `get_req_status(r)` | `req_status(r)` |
-| `get_req_seats(r)` | `req_seats(r)` |
-| `accepted_passengers(t)` | passageiros com pedido `accepted` em `t` |
-| `trip_info(t)` | motorista / origem / destino / preço |
-| `history_list` / `history_position(t)` | histórico e posição |
+| Operação | Retorno | Significado |
+|----------|---------|-------------|
+| `nn <-- remaining_seats(t)` | `NAT` | `seats(t) - occupation(t)` |
+| `bb <-- is_verified(u)` | `BOOL` | `verified(u)` |
+| `nn <-- user_score(u)` | `0..5` | `score(u)` |
+| `st <-- get_trip_status(t)` | `TRIP_STATUS` | `trip_status(t)` |
+| `st <-- get_req_status(r)` | `REQ_STATUS` | `req_status(r)` |
+| `nn <-- get_req_seats(r)` | `NAT` | `req_seats(r)` |
+| `bb <-- is_accepted_on(t, u)` | `BOOL` | `TRUE` se existe pedido `accepted` de `u` em `t` |
+| `dd <-- get_driver(t)` | `USERS` | motorista |
+| `oo <-- get_origin(t)` | `LOCATIONS` | origem |
+| `de <-- get_destination(t)` | `LOCATIONS` | destino |
+| `pp <-- get_price(t)` | `NAT` | preço por vaga |
+| `nn <-- history_length` | `NAT` | `history_len` |
+| `tt <-- history_at(i)` | `TRIPS` | viagem na posição `i` (`i : 1..history_len`) |
+| `nn <-- history_position(t)` | `NAT` | índice de `t` no histórico (`t` já `finished`) |
 
-Formato exato (operações `out <-- name(...)` vs. expressões só no ProB) a definir na implementação da E4.
+Corpos podem permanecer `skip` até a implementação da E4 no `.mch` (para consultas, o `THEN` futuro atribui o escalar de saída).
 
 ---
 
@@ -64,6 +74,7 @@ Formato exato (operações `out <-- name(...)` vs. expressões só no ProB) a de
 
 - Alteração de pontuação pós-viagem (não especificado no README)
 - Novos fluxos além do README
+- Operações que devolvam conjuntos, sequências ou registros compostos
 
 ---
 
@@ -72,5 +83,6 @@ Formato exato (operações `out <-- name(...)` vs. expressões só no ProB) a de
 - [ ] `start_trip` exige ocupação ≥ 1 e status `open`/`full`
 - [ ] Ao iniciar, não restam `pending`
 - [ ] `finish_trip` só de `ongoing` e inclui no histórico
-- [ ] Histórico só com `finished`
-- [ ] Consultas cobrem a lista do §9
+- [ ] Histórico só com `finished`; `history_at(i)` / `history_position(t)` coerentes
+- [ ] Consultas cobrem a lista do §9 com retornos escalares
+- [ ] Nenhuma assinatura usa conjunto / sequência / tupla
