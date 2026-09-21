@@ -38,7 +38,7 @@ Sem variáveis novas previstas; efeito sobre:
 | Operação | Pré-condições / efeito |
 |----------|-------------------------|
 | `cancel_request(r)` | `req_status(r) : {pending, accepted}`; se `accepted`, libera `req_seats(r)` na ocupação; se ficou vaga e status era `full` → `open`; pedido → `cancelled_req` |
-| `cancel_trip(t)` | `trip_status(t) : {draft, open, full}`; viagem → `cancelled`; todos os pedidos ativos da viagem → `cancelled_req` |
+| `cancel_trip(t)` | `trip_status(t) : {open, full}`; viagem → `cancelled`; todos os pedidos ativos da viagem → `cancelled_req` |
 
 ---
 

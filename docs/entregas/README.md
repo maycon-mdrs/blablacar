@@ -6,7 +6,7 @@ Documentação incremental da especificação B do sistema de caronas. O artefat
 
 | Entrega | Documento | Range (README) | Status do modelo |
 |---------|-----------|----------------|------------------|
-| **E1** | [01-usuarios-criar-publicar.md](01-usuarios-criar-publicar.md) | §§1–2 | Esqueleto no `.mch` (ops com `skip`) |
+| **E1** | [01-usuarios-criar-viagem.md](01-usuarios-criar-viagem.md) | §§1–2 | Esqueleto no `.mch` (ops com `skip`) |
 | **E2** | [02-pedido-aceitar-recusar.md](02-pedido-aceitar-recusar.md) | §§3–4 | Outline |
 | **E3** | [03-cancelamentos.md](03-cancelamentos.md) | §5 | Outline |
 | **E4** | [04-iniciar-concluir-consultas.md](04-iniciar-concluir-consultas.md) | §§6–9 | Outline |

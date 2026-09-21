@@ -15,11 +15,11 @@ Sistema de caronas compartilhadas em que motoristas publicam viagens e passageir
 | Ação | Requisitos |
 |------|------------|
 | Pedir carona (passageiro) | Estar verificado **e** pontuação ≥ mínima definida no sistema |
-| Publicar viagem (motorista) | Estar verificado |
+| Criar viagem (motorista) | Estar verificado |
 
 ---
 
-## 2. Criar e publicar viagem
+## 2. Criar viagem
 
 O motorista cria uma viagem com:
 
@@ -32,9 +32,7 @@ O motorista cria uma viagem com:
 
 - origem e destino **não podem ser iguais**
 - vagas entre **1** e um máximo definido no sistema (ex.: 8)
-- a viagem nasce como **draft** (rascunho)
-- só depois de publicar ela fica **open** (disponível para pedidos)
-- viagem **draft** ainda **não aceita** passageiros
+- a viagem nasce como **open** (já disponível para pedidos)
 
 ---
 
@@ -83,7 +81,7 @@ O motorista responde o pedido:
 
 ### Cancelar viagem
 
-- motorista pode cancelar se estiver **draft**, **open** ou **full**
+- motorista pode cancelar se estiver **open** ou **full**
 - ao cancelar, todos os pedidos ativos da viagem vão para **cancelled_req**
 - **não** cancela viagem já em andamento ou concluída (fora do escopo atual)
 
@@ -112,8 +110,7 @@ O motorista responde o pedido:
 
 | Status | Significado |
 |--------|-------------|
-| `draft` | Criada, ainda não publicada |
-| `open` | Publicada, com vaga |
+| `open` | Criada, com vaga |
 | `full` | Lotada |
 | `ongoing` | Em andamento |
 | `finished` | Concluída |
@@ -138,7 +135,6 @@ O motorista responde o pedido:
 - ocupação da viagem ≤ número de assentos (mesmo com pedidos de várias vagas)
 - `open` ⇒ ainda tem vaga livre
 - `full` ⇒ ocupação = capacidade total
-- `draft` ⇒ ocupação zero e sem pedidos ativos
 - viagem em andamento / concluída / cancelada ⇒ sem pedidos pendentes
 - histórico só tem viagens `finished`
 

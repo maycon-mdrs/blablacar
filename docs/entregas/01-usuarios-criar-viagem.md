@@ -1,11 +1,11 @@
-# E1 — Usuários + Criar e publicar viagem
+# E1 — Usuários + Criar viagem
 
 ## 1. Range
 
 Cobre o [README](../../README.md):
 
-- **§1 Usuários** — cadastro, verificação, pontuação 0–5; requisito “verificado” para publicar
-- **§2 Criar e publicar viagem** — origem, destino, vagas, preço; `draft` → `open`
+- **§1 Usuários** — cadastro, verificação, pontuação 0–5; requisito “verificado” para criar viagem
+- **§2 Criar viagem** — origem, destino, vagas, preço; nasce `open`
 
 **Artefato:** [`Blablacar.mch`](../../Blablacar.mch) (esqueleto com `skip`).
 
@@ -20,7 +20,7 @@ Cobre o [README](../../README.md):
 | `USERS` | Identificadores de usuários |
 | `TRIPS` | Identificadores de viagens |
 | `LOCATIONS` | Locais (origem/destino) |
-| `TRIP_STATUS` | `{ draft, open, full, ongoing, finished, cancelled }` — enum completo já declarado; E1 só usa `draft` e `open` |
+| `TRIP_STATUS` | `{ open, full, ongoing, finished, cancelled }` — enum completo já declarado; E1 só usa `open` |
 
 ### CONSTANTS
 
@@ -47,7 +47,7 @@ Cobre o [README](../../README.md):
 | `seats` | `trips --> 1..max_seats` | Capacidade (vagas) |
 | `price` | `trips --> NAT` | Preço por vaga |
 | `trip_status` | `trips --> TRIP_STATUS` | Status da viagem |
-| `occupation` | `trips --> NAT` | Contador de ocupação (E1: sempre 0 em `draft`) |
+| `occupation` | `trips --> NAT` | Contador de ocupação (E1: 0 ao criar) |
 
 Estado ainda **não** modelado (E2+): pedidos, passageiros aceitos, histórico.
 
@@ -61,9 +61,8 @@ Estado ainda **não** modelado (E2+): pedidos, passageiros aceitos, histórico.
 - Pontuação ∈ `0..5`.
 - Capacidade ∈ `1..max_seats`.
 - Origem ≠ destino para toda viagem.
-- `draft` ⇒ ocupação = 0.
-- Em E1, viagens criadas nascem `draft`; só `publish_trip` as move para `open`.
-- Status usados de fato na E1: `draft` e `open` (outros valores do enum ficam para entregas seguintes).
+- Em E1, viagens criadas nascem `open` (já disponíveis para pedidos nas entregas seguintes).
+- Status usados de fato na E1: apenas `open` (outros valores do enum ficam para entregas seguintes).
 
 ### Esboço B
 
@@ -80,7 +79,7 @@ price : trips --> NAT &
 trip_status : trips --> TRIP_STATUS &
 occupation : trips --> NAT &
 !t.(t : trips => origin(t) /= destination(t)) &
-!t.(t : trips & trip_status(t) = draft => occupation(t) = 0)
+!t.(t : trips => trip_status(t) = open)
 ```
 
 Invariantes de pedidos / motorista-não-passageiro / `open`⇔vaga livre / `full` ficam para E2+.
@@ -105,12 +104,10 @@ Pontuação inicial: na implementação futura do corpo, tipicamente `score(u) :
 | Operação | Pré-condições (intenção) |
 |----------|---------------------------|
 | `create_trip(t, d, o, dest, n, p)` | `t : TRIPS` ∧ `t /: trips` ∧ `d : users` ∧ `verified(d) = TRUE` ∧ `o : LOCATIONS` ∧ `dest : LOCATIONS` ∧ `o /= dest` ∧ `n : 1..max_seats` ∧ `p : NAT` |
-| `publish_trip(t)` | `t : trips` ∧ `trip_status(t) = draft` ∧ motorista verificado (já garantido na criação) |
 
 Efeitos esperados (quando o corpo deixar de ser `skip`):
 
-- `create_trip` → inclui `t` em `trips`, preenche atributos, `trip_status(t) = draft`, `occupation(t) = 0`
-- `publish_trip` → `trip_status(t) := open`
+- `create_trip` → inclui `t` em `trips`, preenche atributos, `trip_status(t) = open`, `occupation(t) = 0`
 
 ---
 
@@ -128,8 +125,7 @@ Efeitos esperados (quando o corpo deixar de ser `skip`):
 
 - [ ] Carregar `Blablacar.mch` sem erro de sintaxe
 - [ ] Inicialização (`INITIALISATION`) deixa invariantes verdadeiros
-- [ ] Animar `register` → `verify_user` → `create_trip` → `publish_trip`
+- [ ] Animar `register` → `verify_user` → `create_trip`
 - [ ] Recusar (guard falso) `create_trip` com origem = destino
 - [ ] Recusar `create_trip` com motorista não verificado
-- [ ] Recusar `publish_trip` se status ≠ `draft`
 - [ ] Confirmar que corpos ainda são `skip` (estado não muda nas ops — esperado nesta fase)

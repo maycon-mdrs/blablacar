@@ -3,7 +3,7 @@ SETS
   USERS;
   TRIPS;
   LOCATIONS;
-  TRIP_STATUS = {draft, open, full, ongoing, finished, cancelled}
+  TRIP_STATUS = {open, full, ongoing, finished, cancelled}
 CONSTANTS
   min_score,
   max_seats
@@ -37,8 +37,7 @@ INVARIANT
   trip_status : trips --> TRIP_STATUS &
   occupation : trips --> NAT &
   !t.(t : trips => origin(t) /= destination(t)) &
-  !t.(t : trips & trip_status(t) = draft => occupation(t) = 0) &
-  !t.(t : trips => trip_status(t) : {draft, open})
+  !t.(t : trips => trip_status(t) = open)
 INITIALISATION
   users := {} ||
   verified := {} ||
@@ -79,14 +78,6 @@ OPERATIONS
       o /= dest &
       n : 1..max_seats &
       p : NAT
-    THEN
-      skip
-    END;
-
-  publish_trip(t) =
-    PRE
-      t : trips &
-      trip_status(t) = draft
     THEN
       skip
     END

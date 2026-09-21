@@ -39,7 +39,6 @@ Constantes já existentes: `min_score`, `max_seats`.
 - `occupation(t) <= seats(t)`
 - `open` ⇒ ainda há vaga livre (`occupation < seats`)
 - `full` ⇒ `occupation = seats`
-- `draft` ⇒ ocupação 0 e sem pedidos ativos
 - No máximo um pedido ativo (`pending` ou `accepted`) por (passageiro, viagem)
 - Pedidos só em viagens que aceitam passageiros (`open` / regras de aceite)
 
