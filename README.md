@@ -32,6 +32,7 @@ O motorista cria uma viagem com:
 
 - origem e destino **não podem ser iguais**
 - vagas entre **1** e um máximo definido no sistema (ex.: 8)
+- preço por vaga é um natural (**pode ser 0** — carona gratuita)
 - a viagem nasce como **open** (já disponível para pedidos)
 
 ---

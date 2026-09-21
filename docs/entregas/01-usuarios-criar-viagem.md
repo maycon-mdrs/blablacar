@@ -45,7 +45,7 @@ Cobre o [README](../../README.md):
 | `origin` | `trips --> LOCATIONS` | Origem |
 | `destination` | `trips --> LOCATIONS` | Destino |
 | `seats` | `trips --> 1..max_seats` | Capacidade (vagas) |
-| `price` | `trips --> NAT` | Preço por vaga |
+| `price` | `trips --> NAT` | Preço por vaga (inclui `0`) |
 | `trip_status` | `trips --> TRIP_STATUS` | Status da viagem |
 | `occupation` | `trips --> NAT` | Contador de ocupação (E1: 0 ao criar) |
 
@@ -60,6 +60,7 @@ Estado ainda **não** modelado (E2+): pedidos, passageiros aceitos, histórico.
 - Domínio coerente: `verified`, `score` só para usuários em `users`; atributos de viagem só para `trips`.
 - Pontuação ∈ `0..5`.
 - Capacidade ∈ `1..max_seats`.
+- Preço ∈ `NAT` (inclui `0`).
 - Origem ≠ destino para toda viagem.
 - Em E1, viagens criadas nascem `open` (já disponíveis para pedidos nas entregas seguintes).
 - Status usados de fato na E1: apenas `open` (outros valores do enum ficam para entregas seguintes).
