@@ -2,6 +2,8 @@
 
 Documentação incremental da especificação B do sistema de caronas. O artefato executável é [`Blablacar.mch`](../../Blablacar.mch); cada entrega descreve o **range** do [README](../../README.md) coberto e o que entra no modelo.
 
+> Ver também: [decisões de arquitetura](../decisoes/) — em especial [01 - máquina de contexto + máquina de sistema](../decisoes/01-maquina-de-contexto.md).
+
 ## Índice
 
 | Entrega | Documento | Range (README) | Status do modelo |
