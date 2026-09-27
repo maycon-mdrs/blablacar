@@ -2,7 +2,7 @@
 
 Documentação incremental da especificação B do sistema de caronas. O artefato executável é [`Blablacar.mch`](../../Blablacar.mch); cada entrega descreve o **range** do [README](../../README.md) coberto e o que entra no modelo.
 
-> Ver também: [visão do modelo](../visao-do-modelo.md), [como ler o B deste projeto](../como-ler-o-b.md) e [decisões de arquitetura](../decisoes/) — em especial [01 - máquina de contexto + máquina de sistema](../decisoes/01-maquina-de-contexto.md).
+> Ver também: [descrição informal](../descricao-informal.md), [visão do modelo](../visao-do-modelo.md), [como ler o B deste projeto](../como-ler-o-b.md) e [decisões de arquitetura](../decisoes/) — em especial [01 - máquina de contexto + máquina de sistema](../decisoes/01-maquina-de-contexto.md).
 
 ## Índice
 
