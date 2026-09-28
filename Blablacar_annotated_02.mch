@@ -1,4 +1,4 @@
-MACHINE Blablacar                                          /* copia de leitura; o arquivo que vale e Blablacar.mch */
+MACHINE Blablacar                                          /* copia de leitura; o arquivo que vale e Blablacar_02.mch */
 SEES                                                       /* esta maquina enxerga a de contexto */
   Blablacar_ctx                                            /* de la vem USERS, TRIPS, open, pending, min_score, max_seats */
 VARIABLES                                                  /* daqui para baixo e o estado, o que muda */
