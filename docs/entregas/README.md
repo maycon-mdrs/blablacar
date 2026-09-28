@@ -9,7 +9,7 @@ Documentação incremental da especificação B do sistema de caronas. Os artefa
 | Entrega | Documento | Range (README) | Status do modelo |
 |---------|-----------|----------------|------------------|
 | **E1** | [01-usuarios-criar-viagem.md](01-usuarios-criar-viagem.md) | §§1–2 | Implementado (`register`/`verify_user`/`create_trip` com corpo real) |
-| **E2** | [02-pedido-aceitar-recusar.md](02-pedido-aceitar-recusar.md) | §§3–4 | Outline |
+| **E2** | [02-pedido-aceitar-recusar.md](02-pedido-aceitar-recusar.md) | §§3–4 | Implementado (`request_ride`/`accept_request`/`refuse_request`/`auto_accept_fitting`) |
 | **E3** | [03-cancelamentos.md](03-cancelamentos.md) | §5 | Outline |
 | **E4** | [04-iniciar-concluir-consultas.md](04-iniciar-concluir-consultas.md) | §§6–9 | Outline |
 

@@ -132,11 +132,7 @@ driver : trips --> users
 
 “Para todo `t`, se `t` é uma viagem existente, então origem e destino são diferentes.”
 
-```b
-!t.(t : trips => trip_status(t) = open)
-```
-
-Enquanto só existe `create_trip`, toda viagem está `open`. Essa linha sai quando `full`, `ongoing`, `finished` e `cancelled` passarem a ser alcançáveis. Ela não é uma regra do README; é um invariante temporário do esqueleto.
+`open` e `full` não são “toda viagem está `open`”. Com o aceite, uma viagem `open` ainda tem vaga livre (`occupation(tt) < seats(tt)`), e uma viagem `full` está exatamente lotada (`occupation(tt) = seats(tt)`).
 
 ## `INITIALISATION` — sistema vazio
 
@@ -234,9 +230,32 @@ score := score <+ {u |-> 0}
 
 `\/` é união de conjuntos: `users` passa a conter quem já estava, mais `u`.
 
-## O que este guia ainda não cobre
+## `IF`, `LET` e `ANY`
 
-Entram no modelo nas próximas etapas, e este arquivo deve ganhar uma seção quando aparecerem no `.mch`:
+`accept_request` usa os três. `LET tt, others BE ... IN ... END` dá nome a dois valores calculados uma vez: a viagem do pedido e o conjunto dos outros pedidos `pending` dessa viagem. `IF ... THEN ... ELSE ... END` separa o caso em que o aceite lota a viagem do caso em que ainda sobra vaga.
 
-- `ANY` — escolha não determinística (aceitar automaticamente um pedido que ainda cabe);
-- quantificadores sobre pedidos (recusar todos os `pending` de uma viagem quando ela lota).
+`auto_accept_fitting` não recebe o pedido como parâmetro. O corpo é
+
+```b
+ANY rr WHERE
+  rr : requests &
+  req_status(rr) = pending &
+  occupation(req_trip(rr)) + req_seats(rr) <= seats(req_trip(rr))
+THEN
+  /* o mesmo efeito de accept_request */
+END
+```
+
+`ANY` escolhe um `rr` que satisfaz o `WHERE`. Se houver mais de um, a escolha não é fixa: o ProB pode animar qualquer um deles. Se não houver nenhum, a operação não fica habilitada.
+
+`!r1.(...)` (“para todo”) e `!(r1, r2).(...)` aparecem no invariante e nas pré-condições, por exemplo para impedir dois pedidos ativos do mesmo passageiro na mesma viagem. `#rr.(...)` (“existe”) é a pré-condição de `auto_accept_fitting`: a operação só vale se existir pelo menos um pedido que caiba.
+
+## Pré-imagem e sobrescrita em lote
+
+`req_trip~[{tt}]` é a pré-imagem: os pedidos cuja viagem é `tt`. `req_status~[{pending}]` são os pedidos que hoje estão `pending`. A interseção dos dois, menos o pedido que está sendo aceito, é o conjunto `others`.
+
+`others * {refused}` é o produto cartesiano: uma tabela em que cada pedido de `others` aponta para `refused`. No aceite que lota, essa tabela entra no `<+` e troca todas essas linhas de uma vez:
+
+```b
+req_status := (req_status <+ {rr |-> accepted}) <+ (others * {refused})
+```

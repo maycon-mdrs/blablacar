@@ -2,7 +2,7 @@
 
 ## 1. Range
 
-Outline — [README](../../README.md) **§§3–4** (+ invariantes de ocupação/pedidos do §8).
+Implementado em [`Blablacar.mch`](../../Blablacar.mch) — [README](../../README.md) **§§3–4** (+ invariantes de ocupação/pedidos do §8).
 
 Depende de **E1** (usuários verificados, viagens `open`).
 
@@ -39,16 +39,14 @@ Nenhum set novo. `REQUESTS` e `REQ_STATUS = {pending, accepted, refused, cancell
 
 ---
 
-## 5. OPERATIONS (esqueleto previsto)
+## 5. OPERATIONS
 
-| Operação | Pré-condições principais |
-|----------|--------------------------|
-| `request_ride(r, t, p, n)` | viagem `open`; `p` verificado; `score(p) >= min_score`; `p /= driver(t)`; sem pedido ativo na mesma viagem; `n <= seats(t)`; há ≥ 1 vaga livre; pedido nasce `pending` |
-| `accept_request(r)` | `pending`; vagas pedidas cabem no restante; reserva total; se lotar → `full` + recusar outros `pending` |
-| `refuse_request(r)` | pedido `pending` → `refused` |
-| `auto_accept_fitting` | **não-determinismo**: escolhe um `pending` que ainda caiba |
-
-Corpos podem permanecer `skip` até a implementação da E2 no `.mch`.
+| Operação | Pré-condições | Efeito (implementado) |
+|----------|---------------|------------------------|
+| `request_ride(rr, tt, uu, nn)` | viagem `open`; `uu` verificado; `score(uu) >= min_score`; `uu /= driver(tt)`; sem pedido ativo na mesma viagem; `nn <= seats(tt)`; há ≥ 1 vaga livre | pedido nasce `pending`, com viagem, passageiro e quantidade gravados |
+| `accept_request(rr)` | pedido `pending`; vagas pedidas cabem no restante | reserva todas as vagas; se a ocupação fica igual à capacidade, a viagem vai para `full` e os outros `pending` dessa viagem passam a `refused` |
+| `refuse_request(rr)` | pedido `pending` | `req_status(rr) := refused` |
+| `auto_accept_fitting` | existe um `pending` que ainda cabe | o mesmo efeito de `accept_request`; o `ANY` escolhe qual pedido, se houver mais de um |
 
 ---
 
