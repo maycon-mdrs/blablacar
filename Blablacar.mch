@@ -25,8 +25,8 @@ INVARIANT
   price : trips --> NAT &
   trip_status : trips --> TRIP_STATUS &
   occupation : trips --> NAT &
-  !t.(t : trips => origin(t) /= destination(t)) &
-  !t.(t : trips => trip_status(t) = open)
+  !tt.(tt : trips => origin(tt) /= destination(tt)) &
+  !tt.(tt : trips => trip_status(tt) = open)
 INITIALISATION
   users := {} ||
   verified := {} ||
@@ -40,43 +40,45 @@ INITIALISATION
   trip_status := {} ||
   occupation := {}
 OPERATIONS
-  register(u) =
+  register(uu) =
     PRE
-      u : USERS &
-      u /: users
+      uu : USERS &
+      uu /: users
     THEN
-      users := users \/ {u} ||
-      verified := verified <+ {u |-> FALSE} ||
-      score := score <+ {u |-> 0}
+      users := users \/ {uu} ||
+      verified := verified <+ {uu |-> FALSE} ||
+      score := score <+ {uu |-> 0}
     END;
 
-  verify_user(u) =
+  verify_user(uu) =
     PRE
-      u : users &
-      verified(u) = FALSE
+      uu : USERS &
+      uu : users &
+      verified(uu) = FALSE
     THEN
-      verified := verified <+ {u |-> TRUE}
+      verified := verified <+ {uu |-> TRUE}
     END;
 
-  create_trip(t, d, o, dest, n, p) =
+  create_trip(tt, dd, oo, dest, nn, pp) =
     PRE
-      t : TRIPS &
-      t /: trips &
-      d : users &
-      verified(d) = TRUE &
-      o : LOCATIONS &
+      tt : TRIPS &
+      tt /: trips &
+      dd : USERS &
+      dd : users &
+      verified(dd) = TRUE &
+      oo : LOCATIONS &
       dest : LOCATIONS &
-      o /= dest &
-      n : 1..max_seats &
-      p : NAT
+      oo /= dest &
+      nn : 1..max_seats &
+      pp : NAT
     THEN
-      trips := trips \/ {t} ||
-      driver := driver <+ {t |-> d} ||
-      origin := origin <+ {t |-> o} ||
-      destination := destination <+ {t |-> dest} ||
-      seats := seats <+ {t |-> n} ||
-      price := price <+ {t |-> p} ||
-      trip_status := trip_status <+ {t |-> open} ||
-      occupation := occupation <+ {t |-> 0}
+      trips := trips \/ {tt} ||
+      driver := driver <+ {tt |-> dd} ||
+      origin := origin <+ {tt |-> oo} ||
+      destination := destination <+ {tt |-> dest} ||
+      seats := seats <+ {tt |-> nn} ||
+      price := price <+ {tt |-> pp} ||
+      trip_status := %xx.(xx : trips \/ {tt} | open) ||
+      occupation := occupation <+ {tt |-> 0}
     END
 END
