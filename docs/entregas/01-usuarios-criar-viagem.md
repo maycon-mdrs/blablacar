@@ -7,7 +7,7 @@ Cobre o [README](../../README.md):
 - **§1 Usuários** — cadastro, verificação, pontuação 0–5; requisito “verificado” para criar viagem
 - **§2 Criar viagem** — origem, destino, vagas, preço; nasce `open`
 
-**Artefato:** [`Blablacar_ctx.mch`](../../Blablacar_ctx.mch) (sets, constantes e propriedades) e [`Blablacar.mch`](../../Blablacar.mch) (esqueleto com `skip`, `SEES Blablacar_ctx`).
+**Artefato:** [`Blablacar_ctx.mch`](../../Blablacar_ctx.mch) (sets, constantes e propriedades) e [`Blablacar.mch`](../../Blablacar.mch) (`register`, `verify_user` e `create_trip` com corpo real; `SEES Blablacar_ctx`).
 
 ---
 
@@ -93,26 +93,20 @@ Invariantes de pedidos / motorista-não-passageiro / `open`⇔vaga livre / `full
 
 ## 5. OPERATIONS
 
-Todas com corpo `skip` nesta entrega (guards documentadas para animação futura).
-
 ### Usuários
 
-| Operação | Pré-condições (intenção) |
-|----------|---------------------------|
-| `register(u)` | `u : USERS` ∧ `u /: users` |
-| `verify_user(u)` | `u : users` ∧ `verified(u) = FALSE` (ou `u` ainda não verificado) |
+| Operação | Pré-condições | Efeito (implementado) |
+|----------|---------------|------------------------|
+| `register(u)` | `u : USERS` ∧ `u /: users` | inclui `u` em `users`, `verified(u) := FALSE`, `score(u) := 0` |
+| `verify_user(u)` | `u : users` ∧ `verified(u) = FALSE` | `verified(u) := TRUE` |
 
-Pontuação inicial: na implementação futura do corpo, tipicamente `score(u) := 0` no cadastro. Sem operação de alterar score na E1.
+Sem operação de alterar score na E1: a pontuação nasce 0 no cadastro e não muda nesta entrega.
 
 ### Viagens
 
-| Operação | Pré-condições (intenção) |
-|----------|---------------------------|
-| `create_trip(t, d, o, dest, n, p)` | `t : TRIPS` ∧ `t /: trips` ∧ `d : users` ∧ `verified(d) = TRUE` ∧ `o : LOCATIONS` ∧ `dest : LOCATIONS` ∧ `o /= dest` ∧ `n : 1..max_seats` ∧ `p : NAT` |
-
-Efeitos esperados (quando o corpo deixar de ser `skip`):
-
-- `create_trip` → inclui `t` em `trips`, preenche atributos, `trip_status(t) = open`, `occupation(t) = 0`
+| Operação | Pré-condições | Efeito (implementado) |
+|----------|---------------|------------------------|
+| `create_trip(t, d, o, dest, n, p)` | `t : TRIPS` ∧ `t /: trips` ∧ `d : users` ∧ `verified(d) = TRUE` ∧ `o : LOCATIONS` ∧ `dest : LOCATIONS` ∧ `o /= dest` ∧ `n : 1..max_seats` ∧ `p : NAT` | inclui `t` em `trips`, preenche atributos, `trip_status(t) = open`, `occupation(t) = 0` |
 
 ---
 
@@ -122,7 +116,6 @@ Efeitos esperados (quando o corpo deixar de ser `skip`):
 - Aceitar / recusar, lotação `full`, não-determinismo → **E2**
 - Cancelamentos → **E3**
 - Iniciar / concluir, histórico, consultas completas → **E4**
-- Corpos das operações (`THEN` com atribuições)
 
 ---
 
@@ -133,4 +126,4 @@ Efeitos esperados (quando o corpo deixar de ser `skip`):
 - [ ] Animar `register` → `verify_user` → `create_trip`
 - [ ] Recusar (guard falso) `create_trip` com origem = destino
 - [ ] Recusar `create_trip` com motorista não verificado
-- [ ] Confirmar que corpos ainda são `skip` (estado não muda nas ops — esperado nesta fase)
+- [ ] Confirmar que o estado muda como esperado após cada operação (`register`, `verify_user`, `create_trip`)

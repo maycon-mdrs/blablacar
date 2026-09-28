@@ -45,7 +45,9 @@ OPERATIONS
       u : USERS &
       u /: users
     THEN
-      skip
+      users := users \/ {u} ||
+      verified := verified <+ {u |-> FALSE} ||
+      score := score <+ {u |-> 0}
     END;
 
   verify_user(u) =
@@ -53,7 +55,7 @@ OPERATIONS
       u : users &
       verified(u) = FALSE
     THEN
-      skip
+      verified := verified <+ {u |-> TRUE}
     END;
 
   create_trip(t, d, o, dest, n, p) =
@@ -68,6 +70,13 @@ OPERATIONS
       n : 1..max_seats &
       p : NAT
     THEN
-      skip
+      trips := trips \/ {t} ||
+      driver := driver <+ {t |-> d} ||
+      origin := origin <+ {t |-> o} ||
+      destination := destination <+ {t |-> dest} ||
+      seats := seats <+ {t |-> n} ||
+      price := price <+ {t |-> p} ||
+      trip_status := trip_status <+ {t |-> open} ||
+      occupation := occupation <+ {t |-> 0}
     END
 END
