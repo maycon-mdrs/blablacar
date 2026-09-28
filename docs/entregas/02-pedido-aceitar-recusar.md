@@ -10,12 +10,7 @@ Depende de **E1** (usuários verificados, viagens `open`).
 
 ## 2. SETS / CONSTANTS
 
-| Item | Papel |
-|------|--------|
-| `REQUESTS` | Identificadores de pedidos |
-| `REQ_STATUS = {pending, accepted, refused, cancelled_req}` | Status de pedido |
-
-Constantes já existentes: `min_score`, `max_seats`.
+Nenhum set novo. `REQUESTS` e `REQ_STATUS = {pending, accepted, refused, cancelled_req}` já estão em [`Blablacar_ctx.mch`](../../Blablacar_ctx.mch), junto com `min_score` e `max_seats`. Esta entrega só acrescenta variáveis e operações de pedido em `Blablacar`.
 
 ---
 

@@ -7,11 +7,13 @@ Cobre o [README](../../README.md):
 - **§1 Usuários** — cadastro, verificação, pontuação 0–5; requisito “verificado” para criar viagem
 - **§2 Criar viagem** — origem, destino, vagas, preço; nasce `open`
 
-**Artefato:** [`Blablacar.mch`](../../Blablacar.mch) (esqueleto com `skip`).
+**Artefato:** [`Blablacar_ctx.mch`](../../Blablacar_ctx.mch) (sets, constantes e propriedades) e [`Blablacar.mch`](../../Blablacar.mch) (esqueleto com `skip`, `SEES Blablacar_ctx`).
 
 ---
 
 ## 2. SETS / CONSTANTS
+
+Declarados em [`Blablacar_ctx.mch`](../../Blablacar_ctx.mch). `Blablacar` os enxerga com `SEES` e não os redeclarar.
 
 ### SETS
 
@@ -20,7 +22,9 @@ Cobre o [README](../../README.md):
 | `USERS` | Identificadores de usuários |
 | `TRIPS` | Identificadores de viagens |
 | `LOCATIONS` | Locais (origem/destino) |
+| `REQUESTS` | Identificadores de pedidos — já no contexto; variáveis e operações na E2 |
 | `TRIP_STATUS` | `{ open, full, ongoing, finished, cancelled }` — enum completo já declarado; E1 só usa `open` |
+| `REQ_STATUS` | `{ pending, accepted, refused, cancelled_req }` — já no contexto; uso na E2 |
 
 ### CONSTANTS
 
@@ -124,7 +128,7 @@ Efeitos esperados (quando o corpo deixar de ser `skip`):
 
 ## 7. Checklist ProB
 
-- [ ] Carregar `Blablacar.mch` sem erro de sintaxe
+- [ ] Carregar `Blablacar.mch` (que vê `Blablacar_ctx`) sem erro de sintaxe
 - [ ] Inicialização (`INITIALISATION`) deixa invariantes verdadeiros
 - [ ] Animar `register` → `verify_user` → `create_trip`
 - [ ] Recusar (guard falso) `create_trip` com origem = destino

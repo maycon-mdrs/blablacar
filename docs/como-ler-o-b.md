@@ -1,6 +1,6 @@
 # Como ler o B deste projeto
 
-Guia do que já está em [`Blablacar.mch`](../Blablacar.mch). Não é um manual da linguagem: só o vocabulário que aparece no arquivo, em português, na ordem em que a máquina é lida. O desenho do sistema completo da primeira entrega está em [visão do modelo](visao-do-modelo.md).
+Guia do que já está em [`Blablacar_ctx.mch`](../Blablacar_ctx.mch) (sets, constantes e propriedades) e em [`Blablacar.mch`](../Blablacar.mch) (estado e operações). Não é um manual da linguagem: só o vocabulário que aparece nesses arquivos, em português, na ordem em que as máquinas são lidas. O desenho do sistema completo da primeira entrega está em [visão do modelo](visao-do-modelo.md).
 
 Uma máquina B não é um programa que “roda linha a linha”. É um contrato:
 
@@ -12,32 +12,51 @@ O ProB anima esse contrato (mostra estados e quais operações estão habilitada
 
 ## As seções, de cima para baixo
 
-| Seção | O que é | Muda durante a animação? |
-|-------|---------|--------------------------|
-| `SETS` | Universos de identificadores e enums | Não |
-| `CONSTANTS` / `PROPERTIES` | Parâmetros fixos do sistema e as restrições deles | Não |
-| `VARIABLES` | O estado | Sim |
-| `INVARIANT` | O tipo de cada variável e as regras de segurança | Tem de valer sempre |
-| `INITIALISATION` | O estado inicial (sistema vazio) | Uma vez, no começo |
-| `OPERATIONS` | O que o usuário do sistema pode fazer | Cada chamada muda o estado |
+| Seção | Onde está | O que é | Muda durante a animação? |
+|-------|-----------|---------|--------------------------|
+| `SEES` | `Blablacar` | Liga a máquina de sistema ao contexto | Não |
+| `SETS` | `Blablacar_ctx` | Universos de identificadores e enums | Não |
+| `CONSTANTS` / `PROPERTIES` | `Blablacar_ctx` | Parâmetros fixos do sistema e as restrições deles | Não |
+| `VARIABLES` | `Blablacar` | O estado | Sim |
+| `INVARIANT` | `Blablacar` | O tipo de cada variável e as regras de segurança | Tem de valer sempre |
+| `INITIALISATION` | `Blablacar` | O estado inicial (sistema vazio) | Uma vez, no começo |
+| `OPERATIONS` | `Blablacar` | O que o usuário do sistema pode fazer | Cada chamada muda o estado |
+
+## `SEES` — a máquina de sistema enxerga o contexto
+
+```b
+MACHINE Blablacar
+SEES
+  Blablacar_ctx
+```
+
+`Blablacar_ctx` não tem estado. Ela declara os conjuntos e as constantes. `SEES` torna esses nomes visíveis em `Blablacar` sem copiá-los: `USERS`, `max_seats` e `open` no invariante e nas pré-condições são os da máquina de contexto.
+
+O contexto não muda quando uma operação roda. Nenhuma operação de `Blablacar` atribui valor a `min_score` ou a `max_seats`.
 
 ## `SETS` — de onde vêm os identificadores
+
+Estão em `Blablacar_ctx.mch`:
 
 ```b
 SETS
   USERS;
   TRIPS;
   LOCATIONS;
-  TRIP_STATUS = {open, full, ongoing, finished, cancelled}
+  REQUESTS;
+  TRIP_STATUS = {open, full, ongoing, finished, cancelled};
+  REQ_STATUS = {pending, accepted, refused, cancelled_req}
 ```
 
-`USERS`, `TRIPS` e `LOCATIONS` são conjuntos **adiados**: existem, mas a máquina abstrata não lista os elementos. No ProB eles aparecem como `USERS1`, `TRIPS1`, etc., criados sob demanda. Na implementação (entrega 2) cada um ganha um conjunto finito concreto.
+`USERS`, `TRIPS`, `LOCATIONS` e `REQUESTS` são conjuntos **adiados**: existem, mas a máquina abstrata não lista os elementos. No ProB eles aparecem como `USERS1`, `TRIPS1`, etc., criados sob demanda. Na implementação (entrega 2) cada um ganha um conjunto finito concreto, num `Blablacar_ctx_i`.
 
-`TRIP_STATUS = { ... }` é um enum: o conjunto já nasce com exatamente esses cinco valores. Escrever `open` no restante do arquivo é usar um elemento desse conjunto.
+`TRIP_STATUS` e `REQ_STATUS` são enums: cada conjunto já nasce com exatamente esses valores. Escrever `open` ou `pending` no restante do arquivo é usar um elemento desse conjunto. `REQUESTS` e `REQ_STATUS` já estão declarados; as variáveis e operações de pedido entram na E2.
 
-Um elemento de `USERS` ainda não é um usuário cadastrado. É só um identificador possível. Quem está cadastrado é a variável `users`, mais abaixo.
+Um elemento de `USERS` ainda não é um usuário cadastrado. É só um identificador possível. Quem está cadastrado é a variável `users`, em `Blablacar`.
 
 ## `CONSTANTS` e `PROPERTIES` — números que não mudam
+
+Também em `Blablacar_ctx.mch`:
 
 ```b
 CONSTANTS
@@ -219,6 +238,5 @@ score := score <+ {u |-> 0}
 
 Entram no modelo nas próximas etapas, e este arquivo deve ganhar uma seção quando aparecerem no `.mch`:
 
-- `SEES` — a máquina de sistema passa a enxergar sets e constantes definidos na máquina de contexto;
 - `ANY` — escolha não determinística (aceitar automaticamente um pedido que ainda cabe);
 - quantificadores sobre pedidos (recusar todos os `pending` de uma viagem quando ela lota).

@@ -1,6 +1,6 @@
 # Visão do modelo — primeira entrega
 
-Desenho da máquina abstrata completa (README §§1–9). O [`Blablacar.mch`](../Blablacar.mch) de hoje só tem o trecho de usuários e `create_trip`, ainda com `skip`. Os desenhos abaixo são o alvo dessa primeira entrega, como está fatiado em [`docs/entregas`](entregas/).
+Desenho da máquina abstrata completa (README §§1–9). O vocabulário estático (sets, constantes e propriedades) está em [`Blablacar_ctx.mch`](../Blablacar_ctx.mch); o estado e as operações estão em [`Blablacar.mch`](../Blablacar.mch), que o vê com `SEES`. Hoje `Blablacar` só tem o trecho de usuários e `create_trip`, ainda com `skip`. Os desenhos abaixo são o alvo dessa primeira entrega, como está fatiado em [`docs/entregas`](entregas/).
 
 Cada seta com nome de operação é uma chamada da máquina. Consultas (`remaining_seats`, `is_verified`, …) só leem; não aparecem nas transições.
 
